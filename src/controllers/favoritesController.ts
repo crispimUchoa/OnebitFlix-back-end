@@ -3,6 +3,18 @@ import { AuthenticatedRequest } from "../middlewares/auth";
 import { favoriteServices } from "../services/favoriteServices";
 
 export const favoritesController = {
+    //GET /favorites
+    index: async (req: AuthenticatedRequest, res: Response) => {
+        const userId = req.user!.id
+
+        try {
+            const favorites = await favoriteServices.findByUserId(userId)
+            return res.json(favorites)
+        } catch (err) {
+            if (err instanceof Error) return res.status(400).json({message: err.message})
+        }
+
+    },
     //POST /favorites
     save: async (req: AuthenticatedRequest, res: Response) => {
         const userId = req.user!.id
@@ -11,6 +23,19 @@ export const favoritesController = {
         try {
             const favorite = await favoriteServices.create(userId, courseId)
             return res.status(201).json(favorite)
+        } catch (err) {
+            if (err instanceof Error) return res.status(400).json({message: err.message})
+        }
+    },
+
+    //DELETE /favorites/:id
+    delete: async (req: AuthenticatedRequest, res: Response) => {
+        const userId = req.user!.id
+        const courseId = +req.params.id
+
+        try {
+            await favoriteServices.delete(userId, courseId)
+            return res.status(204).send()
         } catch (err) {
             if (err instanceof Error) return res.status(400).json({message: err.message})
         }
