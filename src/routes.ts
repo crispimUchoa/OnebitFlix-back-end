@@ -17,3 +17,4 @@ router.get('/courses/:id', coursesController.show)
 router.get('/episodes/stream', episodesController.stream)
 
 router.post('/auth/register', authController.register)
+router.post('/auth/login', authController.login)
