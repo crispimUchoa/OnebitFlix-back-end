@@ -1,7 +1,6 @@
 import { DataTypes, Model, Optional } from "sequelize"
 import { sequelize } from "../database"
 import bcrypt from 'bcrypt'
-import { PassThrough } from "stream"
 import { EpisodeInstance } from "./Episode"
 
 type CheckPasswordCallback = (err?: Error, isSame?: boolean)=>void
