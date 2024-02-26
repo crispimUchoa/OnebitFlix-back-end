@@ -1,3 +1,4 @@
+import { where } from "sequelize"
 import { User } from "../models"
 import { EpisodeInstance } from "../models/Episode"
 import { UserCreationAttributes } from "../models/User"
@@ -36,7 +37,11 @@ export const userServices = {
         const user = await User.create(attributes)
         return user
     },
+    update: async (id: number, attributes: {firstName: string, lastName: string, phone: string, birth: Date, email: string}) => {
+        const [affectedRows, updatedUsers] = await User.update(attributes, {where: {id}, returning: true})
 
+        return updatedUsers[0]
+    },
     getKeepWatchingList: async (id: number) => {
         const userWithWatchingEpisodes = await User.findByPk(id, {
             include: {
