@@ -1,6 +1,9 @@
 import { Response } from "express";
 import path from "path";
 import fs from 'fs'
+import { WatchTime } from "../models";
+import { WatchTimeAttributes } from "../models/WatchTime";
+import { where } from "sequelize";
 
 export const episodeServices = {
     streamEpisodeToResponse: (res: Response, videoUrl: string, range: string | undefined) => {
@@ -37,5 +40,22 @@ export const episodeServices = {
 
             fs.createReadStream(filePath).pipe(res)
         }
+    },
+    getWatchTime: async (userId:number, episodeId: number) => {
+        const watchTime = await WatchTime.findOne({where: {userId, episodeId}, attributes: ['seconds']})
+        return watchTime
+    },
+    setWatchTime: async ({seconds, userId, episodeId}: WatchTimeAttributes) => {
+        const watchTimeAlreadyExists = await WatchTime.findOne({where: {userId, episodeId}})
+        console.log('Aqui foi')
+        if(watchTimeAlreadyExists){
+            watchTimeAlreadyExists.seconds=seconds
+            await watchTimeAlreadyExists.save()
+            return watchTimeAlreadyExists
+        }
+        console.log('aqui tabmem')
+        const watchTime = await WatchTime.create({seconds, userId, episodeId})
+        console.log('e aqui')
+        return watchTime
     }
 }
