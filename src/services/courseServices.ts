@@ -40,7 +40,7 @@ export const courseService = {
 
         const randomFeaturedCourses = featuredCourses.sort(()=>0.5 - Math.random())
 
-        return randomFeaturedCourses.slice(0, 3)
+        return randomFeaturedCourses.slice(0, 4)
     },
     getTopTenNewest: async () => {
        const courses = await Course.findAll({

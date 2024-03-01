@@ -34,11 +34,9 @@ export const usersController = {
 
             try {
                 if(err) return res.status(400).json({message: 'Erro de verificação.'})
-                if(!isSame) res.status(400).json({message: 'Senha incorreta.'})
-            
+                if(!isSame) return res.status(400).json({message: 'Senha incorreta.'})
                 await userServices.updatePassword(user.id, newPassword)
-            
-            
+                
                 return res.status(204).send()
             } catch (err) {
                 if (err instanceof Error) return res.status(400).json({message: err.message})
